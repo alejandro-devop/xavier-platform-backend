@@ -1,5 +1,6 @@
 from django.db import models
 from activitiesApp.models import Activity
+from settingsApp.models import HabitMeasures
 from django.contrib.auth.models import User
 
 
@@ -24,6 +25,8 @@ class Habit(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     # Activity related to the habit
     activity = models.ForeignKey(Activity, on_delete=models.SET_NULL, blank=True, null=True)
+    # Measure for the habit follow up
+    measure = models.ForeignKey(HabitMeasures, on_delete=models.SET_NULL, blank=True, null=True)
     # Name for the habit
     name = models.CharField(max_length=200)
     # Brief description for the habit
@@ -34,6 +37,8 @@ class Habit(models.Model):
     should_keep = models.BooleanField(default=False)
     # If the habit follow up is a counter
     is_counter = models.BooleanField(default=False)
+    # If the habit is a timer
+    is_timer = models.BooleanField(default=False)
     # The estimated duration for the habit (number of steps to success)
     days = models.IntegerField(default=90)
     # The current habit streak, it will be reset when no accomplished
