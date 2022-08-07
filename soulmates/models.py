@@ -1,11 +1,23 @@
-import datetime
+from datetime import datetime
 from django.db import models
 from django.contrib.auth.models import User
 
 
 class SoulMate(models.Model):
-    soulmate_left = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
-    soulmate_right = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    soulmate_sender = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        related_name='soulmate_sender'
+    )
+    soulmate_receiver = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        related_name='soulmate_receiver'
+    )
     is_confirmed = models.BooleanField(default=False)
 
 

@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'activitiesApp',
     'habitsApp',
-    'settingsApp'
+    'settingsApp',
+    'soulmates'
 ]
 
 MIDDLEWARE = [
