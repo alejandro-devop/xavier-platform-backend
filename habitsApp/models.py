@@ -15,6 +15,11 @@ class HabitCategory(models.Model):
     # A fontawesome icon name
     icon = models.CharField(max_length=100)
 
+    @staticmethod
+    def it_already_registered(name):
+        items = HabitCategory.objects.filter(name__icontains=name)
+        return len(items) > 0
+
     def __str__(self):
         return self.name
 

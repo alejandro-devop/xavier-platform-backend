@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'settingsApp',
     'soulmates',
     'rest_framework',
-    'rest_framework_simplejwt'
+    'rest_framework_simplejwt',
+    'security'
 ]
 
 MIDDLEWARE = [
@@ -148,6 +149,6 @@ REST_FRAMEWORK = {
 
 ### JWT
 SIMPLE_AWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=800),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1)
 }
