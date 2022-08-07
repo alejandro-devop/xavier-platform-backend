@@ -22,7 +22,7 @@ class HabitCategory(models.Model):
 class Habit(models.Model):
     """Model for the habits"""
     # Owner for the habit
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     # Activity related to the habit
     activity = models.ForeignKey(Activity, on_delete=models.SET_NULL, blank=True, null=True)
     # Measure for the habit follow up

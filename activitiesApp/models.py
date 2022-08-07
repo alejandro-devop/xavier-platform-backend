@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 class ActivityCategory(models.Model):
     """Model for the categories for each activity"""
     # Owner for the activity category
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     # Name for the category
     name = models.CharField(max_length=200)
     # A color for the category activities
@@ -33,7 +33,7 @@ class ActivityCategory(models.Model):
 class Activity(models.Model):
     """Model for the activities"""
     # Owner for the activity
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     # Category associated to the activity
     category = models.ForeignKey(ActivityCategory, on_delete=models.CASCADE)
     # A color to distinguish the activity on reports
