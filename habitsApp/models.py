@@ -16,9 +16,22 @@ class HabitCategory(models.Model):
     icon = models.CharField(max_length=100)
 
     @staticmethod
-    def it_already_registered(name):
-        items = HabitCategory.objects.filter(name__icontains=name)
+    def it_already_registered(name, user_id, item_id=None):
+        if item_id is not None:
+            items = HabitCategory\
+                .objects\
+                .filter(name__iexact=name, user=user_id)\
+                .exclude(id=item_id)
+        else:
+            items = HabitCategory.objects.filter(name__iexact=name, user=user_id)
         return len(items) > 0
+
+    @staticmethod
+    def get_object(user_id, item_id):
+        try:
+            return HabitCategory.objects.get(id=item_id, user = user_id)
+        except HabitCategory.DoesNotExist:
+            return None
 
     def __str__(self):
         return self.name

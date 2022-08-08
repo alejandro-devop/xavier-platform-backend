@@ -148,7 +148,7 @@ REST_FRAMEWORK = {
 }
 
 ### JWT
-SIMPLE_AWT = {
+SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=800),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1)
 }
