@@ -68,5 +68,23 @@ class Habit(models.Model):
     # Estimated finalization for the habit, is the sum of the started date plus dayss
     end_date = models.DateField()
 
+    @staticmethod
+    def already_exists(name, user_id, item_id=None):
+        if item_id is not None:
+            items = Habit\
+                .objects\
+                .filter(name__iexact=name, user=user_id)\
+                .exclude(id=item_id)
+        else:
+            items = Habit.objects.filter(name__iexact=name, user=user_id)
+        return len(items) > 0
+
+    @staticmethod
+    def get_object(user_id, item_id):
+        try:
+            return Habit.objects.get(id=item_id)
+        except Habit.DoesNotExist:
+            return None
+
     def __str__(self):
         return self.name

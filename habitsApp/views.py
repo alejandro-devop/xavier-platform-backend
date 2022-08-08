@@ -102,5 +102,38 @@ class HabitApiList(APIView):
         data = {
             'user': request.user.id,
             'activity': request.data.get('activity'),
-            'measure': request.data.get('activity'),
+            'measure': request.data.get('measure'),
+            'name': request.data.get('name'),
+            'description': request.data.get('description'),
+            'should_avoid': request.data.get('should_avoid'),
+            'should_keep': request.data.get('should_keep'),
+            'is_counter': request.data.get('is_counter'),
+            'is_timer': request.data.get('is_timer'),
+            'days': request.data.get('days'),
+            'start_date': request.data.get('start_date'),
+            'end_date': request.data.get('end_date')
         }
+
+        # Check for the measure if it comes and if it  exists
+        measure = HabitMeasures.get_object(data['user'], data['measure'])
+        if (data['measure'] is not None) and (measure is None):
+            return Response({
+                'error': True,
+                'message': 'The entered measure does not exists'
+            })
+        # Todo: Check for the activity if it comes
+
+        # Preparing to save
+        serializer = HabitSerializer(data=data)
+        # Checking if the habit is not already registered
+        if Habit.already_exists(data['name'], data['user']):
+            return Response({
+                'error': True,
+                'message': "The Habit is already registered"
+            })
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
