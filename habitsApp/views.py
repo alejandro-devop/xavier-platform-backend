@@ -1,8 +1,11 @@
 from rest_framework import permissions, status
-from .models import HabitCategory
-from .serializers import HabitCategorySerializer
+from .models import HabitCategory, Habit, HabitMeasures
+from .serializers import HabitCategorySerializer, HabitSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
+
+
+# ::::::::::::::::::::      Habit category       ::::::::::::::::::::
 
 
 class HabitCategoryApiList(APIView):
@@ -36,7 +39,7 @@ class HabitCategoryApiList(APIView):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-########################################################################################
+
 class HabitCategoryApiDetail(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
@@ -83,3 +86,21 @@ class HabitCategoryApiDetail(APIView):
         return Response({
             'removed': True,
         }, status=status.HTTP_200_OK)
+
+
+# ::::::::::::::::::::      Habits       ::::::::::::::::::::
+
+
+class HabitApiList(APIView):
+    """"""
+    def get(self, request, *args, **kwargs):
+        habits = Habit.objects.filter(user=request.user.id)
+        serializer = HabitSerializer(habits, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request, *args, **kwargs):
+        data = {
+            'user': request.user.id,
+            'activity': request.data.get('activity'),
+            'measure': request.data.get('activity'),
+        }

@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'soulmates',
     'rest_framework',
     'rest_framework_simplejwt',
-    'security'
+    'security',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
