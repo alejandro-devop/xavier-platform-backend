@@ -50,5 +50,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('habits/', include('habitsApp.urls')),
     path('settings/', include('settingsApp.urls')),
+    path('users/', include('security.urls')),
     path('protected/', views.ProtectedView.as_view(), name="protected")
 ]
