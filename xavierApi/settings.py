@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,13 +22,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-k(e)!a3a4pkb7ou@!sk+veh=&phkry7ppi)n)4a%(!l_@_+yr4'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-k(e)!a3a4pkb7ou@!sk+veh=&phkry7ppi)n)4a%(!l_@_+yr4')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool(os.environ.get('DJANGO_DEBUG', True))
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'xavier-habits.alejosworld.com'
+]
 
+# Two truths and a lie
+# 1. When I was studying on The sena I used to get involved in a lot of activities, drawing.
+# 2. At that time I used to dance Reggeton
+# 3. Also with my classmates we started a protest march that stops
 
 # Application definition
 
