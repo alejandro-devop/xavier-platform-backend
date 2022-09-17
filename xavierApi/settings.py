@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 from pathlib import Path
 from datetime import timedelta
 import os
+from dotenv import load_dotenv
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,10 +27,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-k(e)!a3a4pkb7ou@!sk+veh=&phkry7ppi)n)4a%(!l_@_+yr4')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(os.environ.get('DJANGO_DEBUG', True))
-
+#DEBUG = bool(os.environ.get('DJANGO_DEBUG', True))
+DEBUG=True
 ALLOWED_HOSTS = [
-    'xavier-habits.alejosworld.com'
+    os.environ.get('APP_SERVER_DOMAIN', 'alejosworld.com'),
+    os.environ.get('APP_SERVER_ADDRESS', '127.0.0.1'),
+    '127.0.0.1',
 ]
 
 # Two truths and a lie
@@ -92,9 +96,9 @@ WSGI_APPLICATION = 'xavierApi.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'xavier_api',
-        'USER': 'jako',
-        'PASSWORD': 'JKrules',
+        'NAME': os.environ.get('APP_DB_NAME', 'xavier_api'),
+        'USER': os.environ.get('APP_DB_USER', 'root'),
+        'PASSWORD': os.environ.get('APP_DB_PASSWORD', 'jkrules'),
         'HOST': 'localhost',
         'PORT': '3306',
         'OPTIONS': {
@@ -138,8 +142,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
-STATIC_URL = 'static/'
-
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, os.environ.get('APP_STATICS_DIR', 'static/'))
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
