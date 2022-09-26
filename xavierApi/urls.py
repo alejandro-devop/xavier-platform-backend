@@ -49,6 +49,7 @@ urlpatterns = [
     path('api/token/refresh', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
     path('admin/', admin.site.urls),
     path('habits/', include('habitsApp.urls')),
+    path('activities/', include('activitiesApp.urls')),
     path('settings/', include('settingsApp.urls')),
     path('users/', include('security.urls')),
     path('protected/', views.ProtectedView.as_view(), name="protected")

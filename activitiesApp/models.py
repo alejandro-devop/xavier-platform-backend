@@ -25,6 +25,17 @@ class ActivityCategory(models.Model):
     # If the category is for exercise activities
     is_exercise = models.BooleanField(default=False)
 
+    @staticmethod
+    def it_already_registered(name, user_id, item_id=None):
+        if item_id is not None:
+            items = ActivityCategory\
+                .objects\
+                .filter(name__iexact=name, user=user_id)\
+                .exclude(id=item_id)
+        else:
+            items = ActivityCategory.objects.filter(name__iexact=name, user=user_id)
+        return len(items) > 0
+
     def __str__(self):
         """Override when printing the object"""
         return self.name
