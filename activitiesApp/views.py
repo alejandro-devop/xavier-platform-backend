@@ -79,3 +79,15 @@ class ActivityCategoryDetailAPI(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, item_id, *arg, **kwargs):
+        """"""
+        instance = ActivityCategory.get_object(request.user.id, item_id)
+        if not instance:
+            return Response({'error': True, 'message': 'The object does not exists'})
+
+        instance.delete()
+
+        return Response({
+            'removed': True,
+        }, status=status.HTTP_200_OK)
