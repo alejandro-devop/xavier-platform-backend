@@ -45,6 +45,15 @@ class ActivityListApi(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+class ActivityDetailApi(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, item_id, *args, **kwargs):
+        instance = Activity.get_object(request.user.id, item_id)
+        if not instance:
+            return Response({'error': True, 'message': 'The object does not exists'})
+        serializer = ActivityListSerializer(instance)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 class ActivityCategoryApiList(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
