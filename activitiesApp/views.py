@@ -24,6 +24,7 @@ class ActivityCategoryApiList(APIView):
             'is_learning': request.data.get('is_learning'),
             'is_self_care': request.data.get('is_self_care'),
             'is_exercise': request.data.get('is_exercise'),
+            'user': request.user.id
         }
         serializer = ActivityCategorySerializer(data=data)
         if ActivityCategory.it_already_registered(data['name'], request.user.id):
@@ -37,3 +38,14 @@ class ActivityCategoryApiList(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ActivityCategoryDetailAPI(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, item_id, *args, **kwargs):
+        instance = ActivityCategory.get_object(request.user.id, item_id)
+        if not instance:
+            return Response({'error': True, 'message': 'The object does not exists'})
+        serializer = ActivityCategorySerializer(instance)
+        return Response(serializer.data, status=status.HTTP_200_OK)

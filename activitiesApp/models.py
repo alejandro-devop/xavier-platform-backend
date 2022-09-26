@@ -36,6 +36,13 @@ class ActivityCategory(models.Model):
             items = ActivityCategory.objects.filter(name__iexact=name, user=user_id)
         return len(items) > 0
 
+    @staticmethod
+    def get_object(user_id, item_id):
+        try:
+            return ActivityCategory.objects.get(id=item_id, user=user_id)
+        except ActivityCategory.DoesNotExist:
+            return None
+
     def __str__(self):
         """Override when printing the object"""
         return self.name
