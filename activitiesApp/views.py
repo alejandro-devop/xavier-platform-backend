@@ -49,3 +49,33 @@ class ActivityCategoryDetailAPI(APIView):
             return Response({'error': True, 'message': 'The object does not exists'})
         serializer = ActivityCategorySerializer(instance)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def put(self, request, item_id, *args, **kwargs):
+        instance = ActivityCategory.get_object(request.user.id, item_id)
+        if not instance:
+            return Response({'error': True, 'message': 'The object does not exists'})
+
+        data = {
+            'name': request.data.get('name'),
+            'color': request.data.get('color'),
+            'description': request.data.get('description'),
+            'icon':  request.data.get('icon'),
+            'is_rest': request.data.get('is_rest'),
+            'is_work': request.data.get('is_work'),
+            'is_learning': request.data.get('is_learning'),
+            'is_self_care': request.data.get('is_self_care'),
+            'is_exercise': request.data.get('is_exercise'),
+        }
+
+        serializer = ActivityCategorySerializer(instance=instance, data=data, partial=True)
+        if ActivityCategory.it_already_registered(data['name'], request.user.id, instance.id):
+            return Response({
+                'error': True,
+                'message': 'The category already exists'
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
