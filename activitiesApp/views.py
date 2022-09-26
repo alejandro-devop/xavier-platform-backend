@@ -1,9 +1,17 @@
 from rest_framework import permissions, status
-from .models import ActivityCategory
-from .serializers import ActivityCategorySerializer
+from .models import ActivityCategory, Activity
+from .serializers import ActivityCategorySerializer, ActivitySerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
+
+class ActivityListApi(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        activities = Activity.objects.filter(user=request.user.id)
+        serializer = ActivitySerializer(activities, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 class ActivityCategoryApiList(APIView):
     permission_classes = [permissions.IsAuthenticated]

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import ActivityCategory
+from .models import ActivityCategory, Activity
 
 
 class ActivityCategorySerializer(serializers.ModelSerializer):
@@ -17,4 +17,16 @@ class ActivityCategorySerializer(serializers.ModelSerializer):
             'is_learning',
             'is_self_care',
             'is_exercise'
+        ]
+
+
+class ActivitySerializer(serializers.ModelSerializer):
+    category = ActivityCategorySerializer(many=True)
+    class Meta:
+        model = Activity
+        fields = [
+            'name',
+            'color',
+            'category',
+            'description'
         ]
