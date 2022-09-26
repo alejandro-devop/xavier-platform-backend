@@ -23,7 +23,6 @@ class ActivityListApi(APIView):
         }
         # Check for the measure if it comes and if it  exists
         category = ActivityCategory.get_object(data['user'], data['category'])
-        print('The category: ', category)
         if category is None:
             return Response({
                 'error': True,
@@ -54,6 +53,34 @@ class ActivityDetailApi(APIView):
             return Response({'error': True, 'message': 'The object does not exists'})
         serializer = ActivityListSerializer(instance)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def put(self, request, item_id, *args, **kwargs):
+        instance = Activity.get_object(request.user.id, item_id)
+        if not instance:
+            return Response({'error': True, 'message': 'The object does not exists'})
+
+        data = {
+            'name': request.data.get('name'),
+            'color': request.data.get('color'),
+            'description': request.data.get('description'),
+            'category': request.data.get('category'),
+            'user': request.user.id
+        }
+
+        serializer = ActivitySerializer(instance=instance, data=data, partial=True)
+        if Activity.it_already_registered(data['name'], request.user.id, instance.id):
+            return Response({
+                'error': True,
+                'message': 'The item already exists'
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        if serializer.is_valid():
+            serializer.save()
+            serialized_data = ActivityListSerializer(serializer.instance)
+            return Response(serialized_data.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 class ActivityCategoryApiList(APIView):
     permission_classes = [permissions.IsAuthenticated]
 

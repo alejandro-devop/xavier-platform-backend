@@ -69,7 +69,7 @@ class Activity(models.Model):
                 .filter(name__iexact=name, user=user_id)\
                 .exclude(id=item_id)
         else:
-            items = ActivityCategory.objects.filter(name__iexact=name, user=user_id)
+            items = Activity.objects.filter(name__iexact=name, user=user_id)
         return len(items) > 0
 
     @staticmethod
