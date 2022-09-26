@@ -1,6 +1,6 @@
 from rest_framework import permissions, status
 from .models import ActivityCategory, Activity
-from .serializers import ActivityCategorySerializer, ActivitySerializer
+from .serializers import ActivityCategorySerializer, ActivitySerializer, ActivityListSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
@@ -10,8 +10,40 @@ class ActivityListApi(APIView):
 
     def get(self, request, *args, **kwargs):
         activities = Activity.objects.filter(user=request.user.id)
-        serializer = ActivitySerializer(activities, many=True)
+        serializer = ActivityListSerializer(activities, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request, *args, **kwargs):
+        data = {
+            'name': request.data.get('name'),
+            'color': request.data.get('color'),
+            'description': request.data.get('description'),
+            'category':  request.data.get('category'),
+            'user': request.user.id
+        }
+        # Check for the measure if it comes and if it  exists
+        category = ActivityCategory.get_object(data['user'], data['category'])
+        print('The category: ', category)
+        if category is None:
+            return Response({
+                'error': True,
+                'message': 'The entered measure does not exists'
+            })
+
+        serializer = ActivitySerializer(data=data)
+        if Activity.it_already_registered(data['name'], request.user.id):
+            return Response({
+                'error': True,
+                'message': 'The activity already exists'
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        if serializer.is_valid():
+            serializer.save()
+            dataSerializer = ActivityListSerializer(serializer.instance)
+            return Response(dataSerializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class ActivityCategoryApiList(APIView):
     permission_classes = [permissions.IsAuthenticated]
