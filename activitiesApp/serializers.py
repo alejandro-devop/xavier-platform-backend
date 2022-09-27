@@ -49,6 +49,7 @@ class ActivitySerializer(serializers.ModelSerializer):
             'user'
         ]
 
+
 class ActivityFollowUpListSerializer(serializers.ModelSerializer):
     class Meta:
         model = ActivityFollowUp

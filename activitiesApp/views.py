@@ -1,5 +1,5 @@
 from rest_framework import permissions, status
-from .models import ActivityCategory, Activity
+from .models import ActivityCategory, Activity, ActivityFollowUp
 from .serializers import ActivityCategorySerializer, ActivitySerializer, ActivityListSerializer, ActivityFollowUpListSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -182,6 +182,12 @@ class ActivityCategoryDetailAPI(APIView):
 
 
 class AddFollowUpApi(APIView):
+
+    def get(self, request, activity_id, *args, **kwargs):
+        follow_ups = ActivityFollowUp.objects.filter(activity_id=activity_id)
+        serializer = ActivityFollowUpListSerializer(follow_ups, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
     def post(self, request, activity_id, *args, **kwargs):
         data = {
             'date': request.data.get('date'),
