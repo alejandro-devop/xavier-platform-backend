@@ -81,3 +81,10 @@ class Activity(models.Model):
 
     def __str__(self):
         return self.category.name + ": " + self.name
+
+
+class ActivityFollowUp(models.Model):
+    date = models.DateField()
+    description = models.CharField(max_length=500)
+    activity = models.ForeignKey(Activity, on_delete=models.CASCADE, blank=True, null=True)
+    time_spent = models.IntegerField(default=0)

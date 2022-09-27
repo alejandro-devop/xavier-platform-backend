@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import ActivityCategory, Activity
+from .models import ActivityCategory, Activity, ActivityFollowUp
 
 
 class ActivityCategorySerializer(serializers.ModelSerializer):
@@ -48,3 +48,16 @@ class ActivitySerializer(serializers.ModelSerializer):
             'description',
             'user'
         ]
+
+class ActivityFollowUpListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ActivityFollowUp
+        fields = [
+            'id',
+            'date',
+            'description',
+            'activity',
+            'time_spent'
+        ]
+
+
