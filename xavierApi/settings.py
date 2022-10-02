@@ -164,6 +164,6 @@ REST_FRAMEWORK = {
 ### JWT
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=800),
-    'AUTH_HEADER_TYPES': ('JWT',),
+    'AUTH_HEADER_TYPES': ('Bearer'),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1)
 }
