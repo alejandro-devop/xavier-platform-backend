@@ -3,6 +3,7 @@ from .models import ActivityCategory, Activity, ActivityFollowUp
 from .serializers import ActivityCategorySerializer, ActivitySerializer, ActivityListSerializer, ActivityFollowUpListSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from datetime import datetime
 
 
 class ActivityListApi(APIView):
@@ -180,9 +181,25 @@ class ActivityCategoryDetailAPI(APIView):
             'removed': True,
         }, status=status.HTTP_200_OK)
 
+class FollowUpDayApi(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    def get(self, request, day_to_get, *args, **kwargs):
+        parsed_date = datetime.strptime(day_to_get, '%Y-%m-%d')
+        print(parsed_date.year, parsed_date.month, parsed_date.day)
+        follow_ups = ActivityFollowUp.objects.filter(
+            user=request.user.id,
+            date=datetime(
+                parsed_date.year,
+                parsed_date.month,
+                parsed_date.day
+            )
+        )
+        serializer = ActivityFollowUpListSerializer(follow_ups, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 class AddFollowUpApi(APIView):
-
+    permission_classes = [permissions.IsAuthenticated]
     def get(self, request, activity_id, *args, **kwargs):
         follow_ups = ActivityFollowUp.objects.filter(activity_id=activity_id)
         serializer = ActivityFollowUpListSerializer(follow_ups, many=True)
@@ -193,6 +210,7 @@ class AddFollowUpApi(APIView):
             'date': request.data.get('date'),
             'description': request.data.get('description'),
             'time_spent': request.data.get('time_spent'),
+            'user': request.user.id
         }
         activity = Activity.get_object(request.user.id, activity_id)
         if not activity:

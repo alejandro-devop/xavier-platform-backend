@@ -84,6 +84,7 @@ class Activity(models.Model):
 
 
 class ActivityFollowUp(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     date = models.DateField()
     description = models.CharField(max_length=500)
     activity = models.ForeignKey(Activity, on_delete=models.CASCADE, blank=True, null=True)

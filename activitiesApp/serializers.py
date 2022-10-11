@@ -58,7 +58,8 @@ class ActivityFollowUpListSerializer(serializers.ModelSerializer):
             'date',
             'description',
             'activity',
-            'time_spent'
+            'time_spent',
+            'user'
         ]
 
 
