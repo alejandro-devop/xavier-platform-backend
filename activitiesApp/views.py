@@ -3,7 +3,7 @@ from .models import ActivityCategory, Activity, ActivityFollowUp
 from .serializers import ActivityCategorySerializer, ActivitySerializer, ActivityListSerializer, ActivityFollowUpListSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from datetime import datetime, date
+from datetime import datetime, timedelta
 
 
 class ActivityListApi(APIView):
@@ -232,6 +232,9 @@ class AddFollowUpApi(APIView):
         if request.data.get('started_at'):
             parsed_date = datetime.strptime(request.data.get('started_at'), '%Y-%m-%d %H:%M:%S')
             data['started_date'] = parsed_date
+        else:
+            data['started_date'] = datetime.today() - timedelta(minutes=data['time_spent'])
+            print(datetime.today())
 
         serializer = ActivityFollowUpListSerializer(data=data)
 
