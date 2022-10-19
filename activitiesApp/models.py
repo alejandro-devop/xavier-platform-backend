@@ -24,6 +24,13 @@ class ActivityCategory(models.Model):
     is_self_care = models.BooleanField(default=False)
     # If the category is for exercise activities
     is_exercise = models.BooleanField(default=False)
+    is_planning = models.BooleanField(default=False, blank=True, null=True)
+    is_feeding = models.BooleanField(default=False, blank=True, null=True)
+    is_loving = models.BooleanField(default=False, blank=True, null=True)
+    is_idle = models.BooleanField(default=False, blank=True, null=True)
+    is_driving = models.BooleanField(default=False, blank=True, null=True)
+    is_playing = models.BooleanField(default=False, blank=True, null=True)
+    is_entertainment = models.BooleanField(default=False, blank=True, null=True)
 
     @staticmethod
     def it_already_registered(name, user_id, item_id=None):

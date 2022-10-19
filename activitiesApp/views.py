@@ -113,6 +113,13 @@ class ActivityCategoryApiList(APIView):
             'is_learning': request.data.get('is_learning'),
             'is_self_care': request.data.get('is_self_care'),
             'is_exercise': request.data.get('is_exercise'),
+            'is_planning': request.data.get('is_planning'),
+            'is_feeding': request.data.get('is_feeding'),
+            'is_loving': request.data.get('is_loving'),
+            'is_idle': request.data.get('is_idle'),
+            'is_driving': request.data.get('is_driving'),
+            'is_playing': request.data.get('is_playing'),
+            'is_entertainment': request.data.get('is_entertainment'),
             'user': request.user.id
         }
         serializer = ActivityCategorySerializer(data=data)
@@ -154,6 +161,13 @@ class ActivityCategoryDetailAPI(APIView):
             'is_learning': request.data.get('is_learning'),
             'is_self_care': request.data.get('is_self_care'),
             'is_exercise': request.data.get('is_exercise'),
+            'is_planning': request.data.get('is_planning'),
+            'is_feeding': request.data.get('is_feeding'),
+            'is_loving': request.data.get('is_loving'),
+            'is_idle': request.data.get('is_idle'),
+            'is_driving': request.data.get('is_driving'),
+            'is_playing': request.data.get('is_playing'),
+            'is_entertainment': request.data.get('is_entertainment'),
         }
 
         serializer = ActivityCategorySerializer(instance=instance, data=data, partial=True)
@@ -224,7 +238,7 @@ class AddFollowUpApi(APIView):
         if not activity.spent_time:
             activity_data['spent_time'] = data['time_spent']
         else:
-            activity_data['spent_time'] = activity.spent_time + data['time_spent']
+            activity_data['spent_time'] = activity.spent_time + int(data['time_spent'])
 
         activity_serializer = ActivitySerializer(instance=activity, data=activity_data, partial=True)
 
