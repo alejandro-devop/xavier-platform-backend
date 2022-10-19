@@ -60,6 +60,9 @@ class Activity(models.Model):
     name = models.CharField(max_length=200)
     # A brief description for the activity
     description = models.TextField(max_length=800)
+    spent_time = models.IntegerField(blank=True, null=True)
+    spent_time_month = models.IntegerField(blank=True, null=True)
+    current_month = models.DateField(blank=True, null=True)
 
     @staticmethod
     def it_already_registered(name, user_id, item_id=None):
@@ -86,6 +89,7 @@ class Activity(models.Model):
 class ActivityFollowUp(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     date = models.DateField()
+    started_date = models.DateTimeField(blank=True, null=True)
     description = models.CharField(max_length=500)
     activity = models.ForeignKey(Activity, on_delete=models.CASCADE, blank=True, null=True)
     time_spent = models.IntegerField(default=0)

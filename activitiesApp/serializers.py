@@ -51,12 +51,27 @@ class ActivitySerializer(serializers.ModelSerializer):
 
 
 class ActivityFollowUpListSerializer(serializers.ModelSerializer):
+    started_date = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
     class Meta:
         model = ActivityFollowUp
         fields = [
             'id',
             'date',
             'description',
+            'started_date',
+            'activity',
+            'time_spent',
+            'user'
+        ]
+
+class ActivityFollowUpViewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ActivityFollowUp
+        fields = [
+            'id',
+            'date',
+            'description',
+            'started_date',
             'activity',
             'time_spent',
             'user'

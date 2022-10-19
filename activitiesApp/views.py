@@ -219,6 +219,8 @@ class AddFollowUpApi(APIView):
                 'message': 'Invalid activity'
             }, status=status.HTTP_400_BAD_REQUEST)
         data['activity'] = activity_id
+        parsed_date = datetime.strptime(request.data.get('started_at'), '%Y-%m-%d %H:%M:%S')
+        data['started_date'] = parsed_date
         serializer = ActivityFollowUpListSerializer(data=data)
 
         if serializer.is_valid():
