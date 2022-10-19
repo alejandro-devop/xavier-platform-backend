@@ -233,7 +233,7 @@ class AddFollowUpApi(APIView):
             parsed_date = datetime.strptime(request.data.get('started_at'), '%Y-%m-%d %H:%M:%S')
             data['started_date'] = parsed_date
         else:
-            data['started_date'] = datetime.today() - timedelta(minutes=data['time_spent'])
+            data['started_date'] = datetime.today() - timedelta(minutes=int(data['time_spent']))
             print(datetime.today())
 
         serializer = ActivityFollowUpListSerializer(data=data)
