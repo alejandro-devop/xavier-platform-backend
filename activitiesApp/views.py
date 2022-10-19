@@ -3,7 +3,7 @@ from .models import ActivityCategory, Activity, ActivityFollowUp
 from .serializers import ActivityCategorySerializer, ActivitySerializer, ActivityListSerializer, ActivityFollowUpListSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from datetime import datetime
+from datetime import datetime, date
 
 
 class ActivityListApi(APIView):
@@ -218,13 +218,24 @@ class AddFollowUpApi(APIView):
                 'error': True,
                 'message': 'Invalid activity'
             }, status=status.HTTP_400_BAD_REQUEST)
+        # Let's update the activity spent time
+        activity_data = {}
+        # First the global time
+        if not activity.spent_time:
+            activity_data['spent_time'] = data['time_spent']
+        else:
+            activity_data['spent_time'] = activity.spent_time + data['time_spent']
+
+        activity_serializer = ActivitySerializer(instance=activity, data=activity_data, partial=True)
+
         data['activity'] = activity_id
         parsed_date = datetime.strptime(request.data.get('started_at'), '%Y-%m-%d %H:%M:%S')
         data['started_date'] = parsed_date
         serializer = ActivityFollowUpListSerializer(data=data)
 
-        if serializer.is_valid():
+        if serializer.is_valid() and activity_serializer.is_valid():
             serializer.save()
+            activity_serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

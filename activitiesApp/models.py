@@ -61,8 +61,6 @@ class Activity(models.Model):
     # A brief description for the activity
     description = models.TextField(max_length=800)
     spent_time = models.IntegerField(blank=True, null=True)
-    spent_time_month = models.IntegerField(blank=True, null=True)
-    current_month = models.DateField(blank=True, null=True)
 
     @staticmethod
     def it_already_registered(name, user_id, item_id=None):

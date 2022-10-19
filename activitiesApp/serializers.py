@@ -46,6 +46,7 @@ class ActivitySerializer(serializers.ModelSerializer):
             'color',
             'category',
             'description',
+            'spent_time',
             'user'
         ]
 
