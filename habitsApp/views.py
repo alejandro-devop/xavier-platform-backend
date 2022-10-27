@@ -103,6 +103,7 @@ class HabitApiList(APIView):
             'user': request.user.id,
             'activity': request.data.get('activity'),
             'measure': request.data.get('measure'),
+            'category': request.data.get('category'),
             'name': request.data.get('name'),
             'description': request.data.get('description'),
             'should_avoid': request.data.get('should_avoid'),
@@ -117,6 +118,13 @@ class HabitApiList(APIView):
         # Check for the measure if it comes and if it  exists
         measure = HabitMeasures.get_object(data['user'], data['measure'])
         if (data['measure'] is not None) and (measure is None):
+            return Response({
+                'error': True,
+                'message': 'The entered measure does not exists'
+            })
+        # Check for the measure if it comes and if it  exists
+        category_instance = HabitCategory.get_object(data['user'], data['category'])
+        if (data['category'] is not None) and (measure is None):
             return Response({
                 'error': True,
                 'message': 'The entered measure does not exists'

@@ -45,6 +45,8 @@ class Habit(models.Model):
     activity = models.ForeignKey(Activity, on_delete=models.SET_NULL, blank=True, null=True)
     # Measure for the habit follow up
     measure = models.ForeignKey(HabitMeasures, on_delete=models.SET_NULL, blank=True, null=True)
+    # Activity category
+    category = models.ForeignKey(HabitCategory, on_delete=models.SET_NULL, blank=True, null=True)
     # Name for the habit
     name = models.CharField(max_length=200)
     # Brief description for the habit
