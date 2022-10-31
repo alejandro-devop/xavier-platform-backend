@@ -52,7 +52,7 @@ INSTALLED_APPS = [
     'activitiesApp',
     'habitsApp',
     'settingsApp',
-    'lifeGoals'
+    'lifeGoals',
     'soulmates',
     'rest_framework',
     'rest_framework_simplejwt',
