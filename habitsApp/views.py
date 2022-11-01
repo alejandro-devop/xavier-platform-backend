@@ -147,7 +147,6 @@ class HabitApiList(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-
 class HabitApiDetail(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
