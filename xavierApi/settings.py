@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'activitiesApp',
     'habitsApp',
     'settingsApp',
+    'tasks',
     'mySchedule',
     'lifeGoals',
     'soulmates',
