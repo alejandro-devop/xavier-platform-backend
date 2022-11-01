@@ -1,5 +1,5 @@
 from django.urls import path
-
+from .views import GoalApiList
 urlpatterns = [
-    path('goals/', )
+    path('', GoalApiList.as_view())
 ]
