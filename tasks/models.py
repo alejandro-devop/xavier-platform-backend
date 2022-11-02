@@ -17,12 +17,13 @@ class Task(models.Model):
     @staticmethod
     def is_already_registered(name, user_id, item_id=None):
         if item_id is not None:
-            items = Task\
-                .objects\
-                .filter(title__iexact=name, user=user_id)\
+            items = Task \
+                .objects \
+                .filter(title__iexact=name, user=user_id) \
                 .exclude(id=item_id)
         else:
             items = Task.objects.filter(title__iexact=name, user=user_id)
+        print(items)
         return len(items) > 0
 
     @staticmethod
@@ -31,3 +32,6 @@ class Task(models.Model):
             return Task.objects.get(id=item_id, user=user_id)
         except Task.DoesNotExist:
             return None
+
+    def __str__(self):
+        return self.title

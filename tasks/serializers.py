@@ -7,13 +7,16 @@ class TaskStoreSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
         fields = [
+            'id',
             'title',
             'user',
             'category',
             'description',
             'date_line',
             'is_urgent',
-            'priority'
+            'is_completed',
+            'is_canceled',
+            'priority',
         ]
 
 
@@ -22,6 +25,7 @@ class TaskListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
         fields = [
+            'id',
             'title',
             'category',
             'description',

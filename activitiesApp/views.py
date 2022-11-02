@@ -94,6 +94,7 @@ class ActivityDetailApi(APIView):
             'removed': True,
         }, status=status.HTTP_200_OK)
 
+
 class ActivityCategoryApiList(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
