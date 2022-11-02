@@ -12,6 +12,24 @@ class Goal(models.Model):
     is_accomplished = models.BooleanField(null=True, blank=True, default=False)
     dead_line_date = models.DateField(null=True, blank=True)
 
+    @staticmethod
+    def is_already_registered(name, user_id, item_id=None):
+        if item_id is not None:
+            items = Goal\
+                .objects\
+                .filter(name__iexact=name, user=user_id)\
+                .exclude(id=item_id)
+        else:
+            items = Goal.objects.filter(name__iexact=name, user=user_id)
+        return len(items) > 0
+
+    @staticmethod
+    def get_object(user_id, item_id):
+        try:
+            return Goal.objects.get(id=item_id, user=user_id)
+        except Goal.DoesNotExist:
+            return None
+
 
 class GoalReason(models.Model):
     name = models.CharField(max_length=200)
