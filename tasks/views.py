@@ -8,6 +8,35 @@ from .models import Task
 from datetime import datetime
 
 
+class TaskToggleFlagsApi(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, item_id, *args, **kwargs):
+        instance = Task.get_object(request.user.id, item_id)
+        if not instance:
+            return Response({
+                'error': True,
+                'message': 'The task does not exists'
+            })
+        data = {
+            'is_canceled': request.data.get('is_canceled'),
+            'is_completed': request.data.get('is_completed')
+        }
+        serializer = TaskStoreSerializer(instance=instance, data=data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(
+                TaskListSerializer(serializer.instance).data,
+                status=status.HTTP_200_OK
+            )
+
+        return serializer.errors()
+
+
+
+
+
+
 class TaskApiList(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
