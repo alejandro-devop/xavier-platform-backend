@@ -40,7 +40,7 @@ class GoalReason(models.Model):
     is_negative = models.BooleanField(null=True, blank=True, default=False)
 
 
-class GoalObjetive(models.Model):
+class GoalObjective(models.Model):
     name = models.CharField(max_length=200)
     Goal = models.ForeignKey(Goal, on_delete=models.CASCADE, blank=True, null=True)
     description = models.TextField(max_length=800)
