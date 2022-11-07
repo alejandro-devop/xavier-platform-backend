@@ -52,9 +52,17 @@ class GoalApiList(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-
 class GoalDetailApi(APIView):
-    pass
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, item_id, *args, **kwargs):
+        instance = Goal.get_object(request.user.id, item_id)
+        if not instance:
+            return Response({'error': True, 'message': 'The object does not exists'})
+        return Response(
+            GoalListSerializer(instance).data,
+            status=status.HTTP_200_OK
+        )
 
 
 
