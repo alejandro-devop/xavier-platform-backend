@@ -77,6 +77,8 @@ class TaskApiList(APIView):
             serializer.save()
             return Response(TaskListSerializer(serializer.instance).data, status=status.HTTP_201_CREATED)
 
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class TaskDetailApi(APIView):
     permission_classes = [permissions.IsAuthenticated]
