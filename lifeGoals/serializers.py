@@ -9,6 +9,7 @@ class GoalStoreSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'category',
+            'user',
             'name',
             'description',
             'dead_line_date'
