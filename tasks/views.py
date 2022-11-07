@@ -104,13 +104,14 @@ class TaskDetailApi(APIView):
             'is_canceled': request.data.get('is_canceled'),
             'priority': request.data.get('priority')
         }
-        serializer = TaskStoreSerializer(instance=instance, data=data, partial=True)
 
         if request.data.get('deadline'):
             parsed_date = datetime.strptime(request.data.get('deadline'), '%Y-%m-%d')
             data['date_line'] = parsed_date.date()
         else:
             data['date_line'] = None
+
+        serializer = TaskStoreSerializer(instance=instance, data=data, partial=True)
 
         if Task.is_already_registered(data['title'], request.user.id, instance.id):
             # print('Some: ', data['title'], request.user.id, instance.id)
