@@ -54,5 +54,6 @@ urlpatterns = [
     path('users/', include('security.urls')),
     path('tasks/', include('tasks.urls')),
     path('goals/', include('lifeGoals.urls')),
+    path('my-schedule/', include('mySchedule.urls')),
     path('protected/', views.ProtectedView.as_view(), name="protected")
 ]
