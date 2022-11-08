@@ -64,6 +64,16 @@ class GoalDetailApi(APIView):
             status=status.HTTP_200_OK
         )
 
+    def delete(self, request, item_id, *args, **kwargs):
+        instance = Goal.get_object(request.user.id, item_id)
+        if not instance:
+            return Response({
+                'error': True,
+                'message': 'The object does not exits'
+            })
+        instance.delete()
+        return Response({'removed': True}, status=status.HTTP_200_OK)
+
     def put(self, request, item_id, *args, **kwargs):
         instance = Goal.get_object(request.user.id, item_id)
         if not instance:
