@@ -8,6 +8,7 @@ class RoutineStoreSerializer(serializers.ModelSerializer):
         model = Routine
         fields = [
             'id',
+            'title',
             'user',
             'description',
             'initial_time',
@@ -40,6 +41,7 @@ class RoutineBlockListSerializer(serializers.ModelSerializer):
 
     class Meta:
         models = RoutineBlock
+        depth = 1
         fields = [
             'routine',
             'activity',
@@ -52,11 +54,13 @@ class RoutineBlockListSerializer(serializers.ModelSerializer):
 
 class RoutineSingleSerializer(serializers.ModelSerializer):
     # routine_block_set = ActivityListSerializer(many=True)
+    blocks = serializers.SerializerMethodField()
 
     class Meta:
         model = Routine
         fields = [
             'id',
+            'title',
             'user',
             'description',
             'initial_time',
@@ -68,4 +72,10 @@ class RoutineSingleSerializer(serializers.ModelSerializer):
             'is_friday',
             'is_saturday',
             'is_sunday',
+            'blocks'
         ]
+
+    def get_blocks(self, routine):
+        blocks = RoutineBlock.objects.filter(routine=routine.id)
+        return RoutineBlockListSerializer(blocks, many=True).data
+

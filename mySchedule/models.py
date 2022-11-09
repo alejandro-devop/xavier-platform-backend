@@ -17,6 +17,13 @@ class Routine(models.Model):
     is_saturday = models.BooleanField(blank=True, null=True, default=False)
     is_sunday = models.BooleanField(blank=True, null=True, default=False)
 
+    @staticmethod
+    def get_object(user_id, item_id):
+        try:
+            return Routine.objects.get(id=item_id, user=user_id)
+        except Routine.DoesNotExist:
+            return None
+
 
 class RoutineBlock(models.Model):
     routine = models.ForeignKey(Routine, on_delete=models.CASCADE)
