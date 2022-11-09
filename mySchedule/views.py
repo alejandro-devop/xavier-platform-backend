@@ -54,6 +54,16 @@ class MyScheduleRoutineDetailApi(APIView):
             status=status.HTTP_400_BAD_REQUEST
         )
 
+    def delete(self, request, routine_id, *args, **kwargs):
+        instance = Routine.get_object(request.user.id, routine_id)
+        if not instance:
+            return Response({
+                'error': True,
+                'message': 'The object does not exist'
+            })
+        instance.delete()
+        return Response({'removed': True}, status=status.HTTP_200_OK)
+
 
 class MyScheduleRoutineListApi(APIView):
     permission_classes = [permissions.IsAuthenticated]
