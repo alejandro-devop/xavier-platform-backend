@@ -25,7 +25,7 @@ class RoutineStoreSerializer(serializers.ModelSerializer):
 
 class RoutineBlockStoreSerializer(serializers.ModelSerializer):
     class Meta:
-        models = RoutineBlock
+        model = RoutineBlock
         fields = [
             'routine',
             'activity',
@@ -40,10 +40,10 @@ class RoutineBlockListSerializer(serializers.ModelSerializer):
     activity = ActivityListSerializer
 
     class Meta:
-        models = RoutineBlock
+        model = RoutineBlock
         depth = 1
         fields = [
-            'routine',
+            'id',
             'activity',
             'time_from',
             'time_to',

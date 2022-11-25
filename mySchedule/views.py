@@ -5,8 +5,58 @@ from rest_framework.views import APIView
 from rest_framework import permissions, status
 from rest_framework.response import Response
 from activitiesApp.models import Activity
-from .serializer import RoutineStoreSerializer, RoutineSingleSerializer
-from .models import Routine
+from .serializer import RoutineStoreSerializer, RoutineSingleSerializer, RoutineBlockStoreSerializer
+from .models import Routine, RoutineBlock
+
+class RemoveBlockApi(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def delete(self, request, routine_id, block_id, *args, **kwargs):
+        routine = Routine.get_object(request.user.id, routine_id)
+        if not routine:
+            return Response({
+                'error': True,
+                'message': 'The Routine does not exist'
+            })
+        block = RoutineBlock.get_object(routine_id, block_id)
+        if not block:
+            return Response({
+                'error': True,
+                'message': 'The block does not exist'
+            })
+
+        block.delete()
+
+        return Response({'removed': True}, status=status.HTTP_200_OK)
+
+
+class AddBlockApi(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    def post(self, request, routine_id, *args, **kwargs):
+        routine = Routine.get_object(request.user.id, routine_id)
+        activity = Activity.get_object(request.user.id, request.data.get('activity'))
+
+        if not routine:
+            return Response({
+                'error': True,
+                'message': 'The Routine does not exist'
+            })
+
+        data = {
+            'routine': routine.id,
+            'activity': activity.id,
+            'time_from': request.data.get('time_from'),
+            'time_to': request.data.get('time_to'),
+            'should_notify': request.data.get('should_notify'),
+            'notify_time': request.data.get('notify_time')
+        }
+
+        serializer = RoutineBlockStoreSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            routine_data = RoutineSingleSerializer(instance=routine).data
+            return Response(routine_data, status=status.HTTP_200_OK)
+
 
 
 class MyScheduleRoutineDetailApi(APIView):

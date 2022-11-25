@@ -32,3 +32,10 @@ class RoutineBlock(models.Model):
     time_to = models.CharField(max_length=200, default="00:00:00")
     should_notify = models.BooleanField(blank=True, null=True, default=False)
     notify_time = models.IntegerField(default=10)
+
+    @staticmethod
+    def get_object(routine_id, item_id):
+        try:
+            return RoutineBlock.objects.get(id=item_id, routine=routine_id)
+        except RoutineBlock.DoesNotExist:
+            return None
