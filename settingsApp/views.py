@@ -6,13 +6,22 @@ from rest_framework.response import Response
 
 
 class HabitMeasureApiList(APIView):
+    """
+    Api to list and create habit measures
+    """
     permission_classes = [permissions.IsAuthenticated]
     def get(self, request, *args, **kwargs):
+        """
+        Method to list all habit measures list
+        """
         measures = HabitMeasures.objects.filter(user=request.user.id)
         serializer = MeasuresSerializer(measures, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
+        """
+        Method to create a new habit measurement
+        """
         data = {
             'user': request.user.id,
             'name': request.data.get('name'),
@@ -33,9 +42,15 @@ class HabitMeasureApiList(APIView):
 
 
 class HabitMeasureDetail(APIView):
+    """
+    Api to view, update and remove habit measurements
+    """
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, item_id, *args, **kwargs):
+        """
+        Method to View habit measurement
+        """
         instance = HabitMeasures.get_object(request.user.id, item_id)
         if not instance:
             return Response({'error': True, 'message': 'The object doest not exists'})
@@ -44,6 +59,9 @@ class HabitMeasureDetail(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def put(self, request, item_id, *args, **kwargs):
+        """
+        Method to update a habit measurement
+        """
         instance = HabitMeasures.get_object(request.user.id, item_id)
         if not instance:
             return Response({'error': True, 'message': 'The object doest not exists'})
@@ -68,6 +86,9 @@ class HabitMeasureDetail(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, item_id, *args, **kwargs):
+        """
+        Method to update a habit measurement
+        """
         instance = HabitMeasures.get_object(request.user.id, item_id)
         if not instance:
             return Response({'error': True, 'message': 'The object doest not exists'})

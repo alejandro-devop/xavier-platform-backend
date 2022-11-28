@@ -9,9 +9,15 @@ from .serializer import RoutineStoreSerializer, RoutineSingleSerializer, Routine
 from .models import Routine, RoutineBlock
 
 class RemoveBlockApi(APIView):
+    """
+    Api to remove blocks from a routine
+    """
     permission_classes = [permissions.IsAuthenticated]
 
     def delete(self, request, routine_id, block_id, *args, **kwargs):
+        """
+        Method to remove the block from the Routine
+        """
         routine = Routine.get_object(request.user.id, routine_id)
         if not routine:
             return Response({
@@ -31,8 +37,14 @@ class RemoveBlockApi(APIView):
 
 
 class AddBlockApi(APIView):
+    """
+    Api to add blocks to a routine
+    """
     permission_classes = [permissions.IsAuthenticated]
     def post(self, request, routine_id, *args, **kwargs):
+        """
+        Method to add blocks to a routine
+        """
         routine = Routine.get_object(request.user.id, routine_id)
         activity = Activity.get_object(request.user.id, request.data.get('activity'))
 
@@ -58,10 +70,15 @@ class AddBlockApi(APIView):
             return Response(routine_data, status=status.HTTP_200_OK)
 
 
-
 class MyScheduleRoutineDetailApi(APIView):
+    """
+    Api to view and update the Routines
+    """
     permission_classes = [permissions.IsAuthenticated]
     def get(self, request, routine_id, *args, **kwargs):
+        """
+        Method to view a routine
+        """
         instance = Routine.get_object(request.user.id, routine_id)
         if not instance:
             return Response({
@@ -73,6 +90,9 @@ class MyScheduleRoutineDetailApi(APIView):
 
 
     def put(self, request, routine_id, *args, **kwargs):
+        """
+        Method to update a routine
+        """
         instance = Routine.get_object(request.user.id, routine_id)
         if not instance:
             return Response({
@@ -105,6 +125,9 @@ class MyScheduleRoutineDetailApi(APIView):
         )
 
     def delete(self, request, routine_id, *args, **kwargs):
+        """
+        Method to remove a routine
+        """
         instance = Routine.get_object(request.user.id, routine_id)
         if not instance:
             return Response({
@@ -116,8 +139,14 @@ class MyScheduleRoutineDetailApi(APIView):
 
 
 class MyScheduleRoutineListApi(APIView):
+    """
+    Api to create and list
+    """
     permission_classes = [permissions.IsAuthenticated]
     def post(self, request, *args, **kwargs):
+        """
+        Method to create a routine
+        """
         data = {
             'user': request.user.id,
             'title': request.data.get('title'),

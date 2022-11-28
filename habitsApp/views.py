@@ -9,17 +9,23 @@ from rest_framework.response import Response
 
 
 class HabitCategoryApiList(APIView):
-    """"""
+    """
+    API to list habit categories and create new ones
+    """
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
-        """"""
+        """
+        Method to list categories
+        """
         categories = HabitCategory.objects.filter(user=request.user.id)
         serializer = HabitCategorySerializer(categories, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
-        """"""
+        """
+        Method to create a category
+        """
         data = {
             'name': request.data.get('name'),
             'description': request.data.get('description'),
@@ -41,10 +47,15 @@ class HabitCategoryApiList(APIView):
 
 
 class HabitCategoryApiDetail(APIView):
+    """
+    API to view, update and remove Habit categories
+    """
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, item_id, *args, **kwargs):
-        """"""
+        """
+        Method to get information for a single habit category
+        """
         instance = HabitCategory.get_object(request.user.id, item_id)
         if not instance:
             return Response({'error': True, 'message': 'The object does not exists'})
@@ -52,6 +63,9 @@ class HabitCategoryApiDetail(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def put(self, request, item_id, *args, **kwargs):
+        """
+        Method to update a single category
+        """
         instance = HabitCategory.get_object(request.user.id, item_id)
         if not instance:
             return Response({'error': True, 'message': 'The object does not exists'})
@@ -76,7 +90,9 @@ class HabitCategoryApiDetail(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, item_id, *arg, **kwargs):
-        """"""
+        """
+        Method to remove a single habit category
+        """
         instance = HabitCategory.get_object(request.user.id, item_id)
         if not instance:
             return Response({'error': True, 'message': 'The object does not exists'})
@@ -92,13 +108,20 @@ class HabitCategoryApiDetail(APIView):
 
 
 class HabitApiList(APIView):
-    """"""
+    """API to list habits and create habits"""
+    permission_classes = [permissions.IsAuthenticated]
     def get(self, request, *args, **kwargs):
+        """
+        Method to list habits
+        """
         habits = Habit.objects.filter(user=request.user.id)
         serializer = HabitSerializer(habits, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
+        """
+        Method to create a habit
+        """
         data = {
             'user': request.user.id,
             'activity': request.data.get('activity'),
@@ -148,9 +171,15 @@ class HabitApiList(APIView):
 
 
 class HabitApiDetail(APIView):
+    """
+    Api to view, update and delete habits
+    """
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, item_id, *args, **kwargs):
+        """
+        Method to view habit
+        """
         instance = Habit.get_object(request.user.id, item_id)
         if not instance:
             return Response({
@@ -162,6 +191,9 @@ class HabitApiDetail(APIView):
 
 
     def put(self, request, item_id, *args, **kwargs):
+        """
+        Method to update habit
+        """
         instance = Habit.get_object(request.user.id, item_id)
         if not instance:
             return Response({
@@ -199,6 +231,9 @@ class HabitApiDetail(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, item_id, *args, **kwargs):
+        """
+        Method to remove habits
+        """
         instance = Habit.get_object(request.user.id, item_id)
         if not instance:
             return Response({

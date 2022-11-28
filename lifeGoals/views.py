@@ -9,9 +9,15 @@ from .models import Goal
 
 
 class GoalApiList(APIView):
+    """
+    Api to list and create life goals
+    """
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
+        """
+        Api to list goals
+        """
         return Response(
             GoalListSerializer(Goal.objects.filter(user=request.user.id), many=True).data,
             status=status.HTTP_200_OK

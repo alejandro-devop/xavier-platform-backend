@@ -7,9 +7,15 @@ from datetime import datetime, timedelta
 
 
 class ActivityListApi(APIView):
+    """
+    API To list, and create a new Activity
+    """
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
+        """
+        Method to list the activities
+        """
         activities = Activity.objects.filter(user=request.user.id)
         serializer = ActivityListSerializer(activities, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -46,9 +52,15 @@ class ActivityListApi(APIView):
 
 
 class ActivityDetailApi(APIView):
+    """
+    API to View, Update and Delete activities
+    """
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, item_id, *args, **kwargs):
+        """
+        Method to View a single activity
+        """
         instance = Activity.get_object(request.user.id, item_id)
         if not instance:
             return Response({'error': True, 'message': 'The object does not exists'})
@@ -56,6 +68,9 @@ class ActivityDetailApi(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def put(self, request, item_id, *args, **kwargs):
+        """
+        Method to update a single activity
+        """
         instance = Activity.get_object(request.user.id, item_id)
         if not instance:
             return Response({'error': True, 'message': 'The object does not exists'})
@@ -83,7 +98,9 @@ class ActivityDetailApi(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, item_id, *arg, **kwargs):
-        """"""
+        """
+        Method to remove an activity
+        """
         instance = Activity.get_object(request.user.id, item_id)
         if not instance:
             return Response({'error': True, 'message': 'The object does not exists'})
@@ -96,14 +113,23 @@ class ActivityDetailApi(APIView):
 
 
 class ActivityCategoryApiList(APIView):
+    """
+    API to list and create Activity categories
+    """
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
+        """
+        method to list the categories
+        """
         categories = ActivityCategory.objects.filter(user=request.user.id)
         serializer = ActivityCategorySerializer(categories, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
+        """
+        Method to create a category
+        """
         data = {
             'name': request.data.get('name'),
             'color': request.data.get('color'),
@@ -138,9 +164,15 @@ class ActivityCategoryApiList(APIView):
 
 
 class ActivityCategoryDetailAPI(APIView):
+    """
+    API To view, update and delete categories
+    """
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, item_id, *args, **kwargs):
+        """
+        Method to view a category
+        """
         instance = ActivityCategory.get_object(request.user.id, item_id)
         if not instance:
             return Response({'error': True, 'message': 'The object does not exists'})
@@ -148,6 +180,9 @@ class ActivityCategoryDetailAPI(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def put(self, request, item_id, *args, **kwargs):
+        """
+        Method to update a category
+        """
         instance = ActivityCategory.get_object(request.user.id, item_id)
         if not instance:
             return Response({'error': True, 'message': 'The object does not exists'})
@@ -185,7 +220,9 @@ class ActivityCategoryDetailAPI(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, item_id, *arg, **kwargs):
-        """"""
+        """
+        Method to delete a category
+        """
         instance = ActivityCategory.get_object(request.user.id, item_id)
         if not instance:
             return Response({'error': True, 'message': 'The object does not exists'})
@@ -196,9 +233,16 @@ class ActivityCategoryDetailAPI(APIView):
             'removed': True,
         }, status=status.HTTP_200_OK)
 
+
 class FollowUpDayApi(APIView):
+    """
+    API to get Follow ups between dates
+    """
     permission_classes = [permissions.IsAuthenticated]
     def get(self, request, day_to_get, *args, **kwargs):
+        """
+        Method to get the followups between dates
+        """
         parsed_date = datetime.strptime(day_to_get, '%Y-%m-%d')
         print(parsed_date.year, parsed_date.month, parsed_date.day)
         follow_ups = ActivityFollowUp.objects.filter(
@@ -214,13 +258,22 @@ class FollowUpDayApi(APIView):
 
 
 class AddFollowUpApi(APIView):
+    """
+    API to get A particular Activity's follow ups and to add
+    """
     permission_classes = [permissions.IsAuthenticated]
     def get(self, request, activity_id, *args, **kwargs):
+        """
+        Method to add follow ups
+        """
         follow_ups = ActivityFollowUp.objects.filter(activity_id=activity_id)
         serializer = ActivityFollowUpListSerializer(follow_ups, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, activity_id, *args, **kwargs):
+        """
+        Method to add new follow up
+        """
         data = {
             'date': request.data.get('date'),
             'description': request.data.get('description'),
