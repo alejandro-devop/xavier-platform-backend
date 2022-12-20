@@ -9,9 +9,15 @@ from datetime import datetime
 
 
 class TaskToggleFlagsApi(APIView):
+    """
+    API to toggle the flags for the Task Api
+    """
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, item_id, *args, **kwargs):
+        """
+        Method to modify the flags on any task
+        """
         instance = Task.get_object(request.user.id, item_id)
         if not instance:
             return Response({
@@ -38,14 +44,23 @@ class TaskToggleFlagsApi(APIView):
 
 
 class TaskApiList(APIView):
+    """
+    Api to list and create new Tasks
+    """
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
+        """
+        Method to list the tasks
+        """
         tasks = Task.objects.filter(user=request.user.id)
         serializer = TaskListSerializer(tasks, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
+        """
+        method to create a new task
+        """
         data = {
             'title': request.data.get('title'),
             'user': request.user.id,
@@ -81,9 +96,16 @@ class TaskApiList(APIView):
 
 
 class TaskDetailApi(APIView):
+    """
+    Api to View, Update and delete tasks
+    """
     permission_classes = [permissions.IsAuthenticated]
 
+
     def get(self, request, item_id, *args, **kwargs):
+        """
+        Method to get a single task detaial
+        """
         instance = Task.get_object(request.user.id, item_id)
         if not instance:
             return Response({'error': True, 'message': 'The object does not exists'})
@@ -91,6 +113,9 @@ class TaskDetailApi(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def put(self, request, item_id, *args, **kwargs):
+        """
+        Method to update aa task
+        """
         instance = Task.get_object(request.user.id, item_id)
         if not instance:
             return Response({'error': True, 'message': 'The object does not exists'})
@@ -130,6 +155,9 @@ class TaskDetailApi(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, item_id, *args, **kwargs):
+        """
+        Method to delete a task
+        """
         instance = Task.get_object(request.user.id, item_id)
         if not instance:
             return Response({'error': True, 'message': 'The object does not exists'})
