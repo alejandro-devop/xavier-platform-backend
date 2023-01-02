@@ -53,6 +53,7 @@ class ActivitySerializer(serializers.ModelSerializer):
 
 class ActivityFollowUpListSerializer(serializers.ModelSerializer):
     started_date = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
+    activity = ActivityListSerializer(many=False, read_only=True)
     class Meta:
         model = ActivityFollowUp
         fields = [
