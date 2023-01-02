@@ -1,6 +1,6 @@
 from rest_framework import permissions, status
 from .models import ActivityCategory, Activity, ActivityFollowUp
-from .serializers import ActivityCategorySerializer, ActivitySerializer, ActivityListSerializer, ActivityFollowUpListSerializer
+from .serializers import ActivityCategorySerializer, ActivitySerializer, ActivityListSerializer, ActivityFollowUpListSerializer, ActivityFollowUpSaveSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from datetime import datetime, timedelta
@@ -304,11 +304,12 @@ class AddFollowUpApi(APIView):
             data['started_date'] = datetime.today() - timedelta(minutes=int(data['time_spent']))
             print(datetime.today())
 
-        serializer = ActivityFollowUpListSerializer(data=data)
+        serializer = ActivityFollowUpSaveSerializer(data=data)
 
         if serializer.is_valid() and activity_serializer.is_valid():
             serializer.save()
             activity_serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            data_serializer = ActivityFollowUpListSerializer(serializer.instance)
+            return Response(data_serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
