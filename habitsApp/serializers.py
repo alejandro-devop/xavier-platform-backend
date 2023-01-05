@@ -1,5 +1,7 @@
 from rest_framework import serializers
 from .models import HabitCategory, Habit
+from activitiesApp.serializers import ActivityListSerializer
+from settingsApp.serializers import MeasuresSerializer
 
 
 class HabitCategorySerializer(serializers.ModelSerializer):
@@ -37,6 +39,8 @@ class HabitSerializer(serializers.ModelSerializer):
 
 class HabitListSerializer(serializers.ModelSerializer):
     category = HabitCategorySerializer(many=False, read_only=True)
+    activity = ActivityListSerializer(many=False, read_only=True)
+    measure = MeasuresSerializer(many=False, read_only=True)
 
     class Meta:
         model = Habit

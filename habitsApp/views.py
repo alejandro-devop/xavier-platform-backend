@@ -1,6 +1,6 @@
 from rest_framework import permissions, status
 from .models import HabitCategory, Habit, HabitMeasures
-from .serializers import HabitCategorySerializer, HabitSerializer
+from .serializers import HabitCategorySerializer, HabitSerializer, HabitListSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
@@ -115,7 +115,7 @@ class HabitApiList(APIView):
         Method to list habits
         """
         habits = Habit.objects.filter(user=request.user.id)
-        serializer = HabitSerializer(habits, many=True)
+        serializer = HabitListSerializer(habits, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
@@ -167,7 +167,8 @@ class HabitApiList(APIView):
 
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            data_serializer = HabitListSerializer(instance=serializer.instance)
+            return Response(data_serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
