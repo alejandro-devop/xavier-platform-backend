@@ -56,5 +56,7 @@ class HabitListSerializer(serializers.ModelSerializer):
             'streak',
             'max_streak',
             'start_date',
-            'end_date'
+            'end_date',
+            'timer_goal',
+            'times_goal'
         ]
