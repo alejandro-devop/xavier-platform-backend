@@ -104,6 +104,8 @@ class Habit(models.Model):
     # Estimated finalization for the habit, is the sum of the started date plus days
     end_date = models.DateField()
     daily_goal = models.IntegerField(default=0, null=True, blank=True)
+    timer_goal = models.IntegerField(default=0, null=True, blank=True)
+    times_goal = models.IntegerField(default=0, null=True, blank=True)
 
     @staticmethod
     def already_exists(name, user_id, item_id=None):

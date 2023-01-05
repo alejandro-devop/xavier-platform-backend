@@ -213,7 +213,9 @@ class HabitApiDetail(APIView):
             'is_timer': request.data.get('is_timer'),
             'days': request.data.get('days'),
             'start_date': request.data.get('start_date'),
-            'end_date': request.data.get('end_date')
+            'end_date': request.data.get('end_date'),
+            'timer_goal': request.data.get('timer_goal'),
+            'times_goal': request.data.get('times_goal'),
         }
 
         serializer = HabitSerializer(instance=instance, data=data)
