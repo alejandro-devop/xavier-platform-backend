@@ -59,7 +59,7 @@ class HabitCategory(models.Model):
     @staticmethod
     def get_object(user_id, item_id):
         try:
-            return HabitCategory.objects.get(id=item_id, user = user_id)
+            return HabitCategory.objects.get(id=item_id, user=user_id)
         except HabitCategory.DoesNotExist:
             return None
 

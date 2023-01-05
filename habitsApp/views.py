@@ -142,17 +142,20 @@ class HabitApiList(APIView):
 
         # Check for the measure if it comes and if it  exists
         measure = HabitMeasures.get_object(data['user'], data['measure'])
-        if (data['measure'] is not None) and (measure is None):
+
+        if data['measure'] is not None and measure is None:
+            print('Its here')
             return Response({
                 'error': True,
                 'message': 'The entered measure does not exists'
             })
         # Check for the measure if it comes and if it  exists
         category_instance = HabitCategory.get_object(data['user'], data['category'])
-        if (data['category'] is not None) and (measure is None):
+
+        if (data['category'] is not None) and (category_instance is None):
             return Response({
                 'error': True,
-                'message': 'The entered measure does not exists'
+                'message': 'The entered Category does not exists'
             })
         # Todo: Check for the activity if it comes
 
