@@ -62,5 +62,6 @@ class HabitListSerializer(serializers.ModelSerializer):
             'start_date',
             'end_date',
             'timer_goal',
-            'times_goal'
+            'times_goal',
+            'daily_goal'
         ]
