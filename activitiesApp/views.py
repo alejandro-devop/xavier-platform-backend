@@ -244,7 +244,7 @@ class FollowUpDayApi(APIView):
         Method to get the followups between dates
         """
         parsed_date = datetime.strptime(day_to_get, '%Y-%m-%d')
-        print(parsed_date.year, parsed_date.month, parsed_date.day)
+
         follow_ups = ActivityFollowUp.objects.filter(
             user=request.user.id,
             date=datetime(

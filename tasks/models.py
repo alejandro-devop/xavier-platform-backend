@@ -23,7 +23,7 @@ class Task(models.Model):
                 .exclude(id=item_id)
         else:
             items = Task.objects.filter(title__iexact=name, user=user_id)
-        print(items)
+
         return len(items) > 0
 
     @staticmethod

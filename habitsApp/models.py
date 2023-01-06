@@ -2,6 +2,7 @@ from django.db import models
 from activitiesApp.models import Activity
 from settingsApp.models import HabitMeasures
 from django.contrib.auth.models import User
+from datetime import datetime, timedelta
 
 
 class HabitType(models.Model):
@@ -137,5 +138,19 @@ class HabitFollowUp(models.Model):
     habit = models.ForeignKey(Habit, on_delete=models.CASCADE, blank=True, null=True)
     time_spent = models.IntegerField(default=0)
     daily_goal = models.IntegerField(blank=True, null=True, default=0)
+    daily_target = models.IntegerField(blank=True, null=True, default=0)
     is_accomplished = models.BooleanField(blank=True, null=True, default=False)
     is_failed = models.BooleanField(blank=True, null=True, default=False)
+
+    @staticmethod
+    def get_object_by_date(day_date, user_id):
+        parsed_date = datetime.strptime(day_date, '%Y-%m-%d')
+        instance = HabitFollowUp.objects.filter(
+            user=user_id,
+            date=datetime(
+                parsed_date.year,
+                parsed_date.month,
+                parsed_date.day
+            )
+        ).first()
+        return instance

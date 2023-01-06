@@ -1,11 +1,87 @@
 from rest_framework import permissions, status
-from .models import HabitCategory, Habit, HabitMeasures
-from .serializers import HabitCategorySerializer, HabitSerializer, HabitListSerializer
+from .models import HabitCategory, Habit, HabitMeasures, HabitFollowUp
+from .serializers import HabitCategorySerializer, HabitSerializer, HabitListSerializer, HabitFollowUpSaveSerializer, HabitFollowUpListSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
 
 # ::::::::::::::::::::      Habit category       ::::::::::::::::::::
+
+class HabitFollowUpApi(APIView):
+
+    def update_habit(self, habit: Habit, accomplished, failed):
+        if accomplished:
+            habit = self.accomplish_habit(habit)
+        if failed:
+            habit = self.fail_habit(habit)
+        habit.save()
+        return HabitListSerializer(instance=habit).data
+
+    def accomplish_habit(self, habit: Habit):
+        habit.streak = habit.streak + 1
+        if habit.streak > habit.max_streak:
+            habit.max_streak = habit.streak
+        return habit
+
+    def fail_habit(self, habit: Habit):
+        habit.streak = 0
+        return habit
+
+    def get(self, request, habit_id, *args, **kwargs):
+        habit = Habit.get_object(request.user.id, habit_id)
+        if not habit:
+            return Response({'error': True, 'message': 'The object does not exists'})
+        follow_ups = HabitFollowUp.objects.filter(user=request.user.id)
+        serializer = HabitFollowUpListSerializer(follow_ups, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request, habit_id, *args, **kwargs):
+        habit = Habit.get_object(request.user.id, habit_id)
+        if not habit:
+            return Response({'error': True, 'message': 'The object does not exists'})
+        date = request.data.get('date')
+        follow_up_instance = HabitFollowUp.get_object_by_date(date, request.user.id)
+        data = {
+            'date': date,
+            'user': request.user.id,
+            'started_date': date,
+            'description': request.data.get('description'),
+            'habit': habit_id,
+            'time_spent': 0,
+            'daily_target': habit.daily_goal,
+            'daily_goal': request.data.get('daily_goal'),
+            'is_accomplished': request.data.get('is_accomplished'),
+            'is_failed': request.data.get('is_failed'),
+        }
+        habit_to_print = HabitListSerializer(instance=habit).data
+        if follow_up_instance is None:
+            # the item does not exist
+            serializer_save = HabitFollowUpSaveSerializer(data=data)
+            if serializer_save.is_valid():
+                # increase the habit stats
+                serializer_save.save()
+                habit.daily_goal = data['daily_goal']
+                habit_to_print = self.update_habit(habit, data['is_accomplished'], data['is_failed'])
+
+                data_serializer = HabitFollowUpListSerializer(instance=serializer_save.instance)
+                return Response({**data_serializer.data, 'habit': habit_to_print}, status=status.HTTP_200_OK)
+            else:
+                return Response(serializer_save.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        else:
+            serializer_update = HabitFollowUpSaveSerializer(instance=follow_up_instance, data=data, partial=True)
+            if serializer_update.is_valid():
+                habit.daily_goal = data['daily_goal']
+
+                if follow_up_instance.is_accomplished is False:
+                    habit_to_print = self.update_habit(habit, data['is_accomplished'], data['is_failed'])
+
+                serializer_update.save()
+                serializer_data = HabitFollowUpListSerializer(instance=serializer_update.instance)
+                return Response({**serializer_data.data, 'habit': habit_to_print}, status=status.HTTP_200_OK)
+            else:
+                return Response(serializer_update.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 class HabitCategoryApiList(APIView):

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import HabitCategory, Habit
+from .models import HabitCategory, Habit, HabitFollowUp
 from activitiesApp.serializers import ActivityListSerializer
 from settingsApp.serializers import MeasuresSerializer
 
@@ -64,4 +64,42 @@ class HabitListSerializer(serializers.ModelSerializer):
             'timer_goal',
             'times_goal',
             'daily_goal'
+        ]
+
+
+class HabitFollowUpSaveSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = HabitFollowUp
+        fields = [
+            'user',
+            'date',
+            'started_date',
+            'description',
+            'habit',
+            'time_spent',
+            'daily_goal',
+            'daily_target',
+            'is_accomplished',
+            'is_failed'
+        ]
+
+
+class HabitFollowUpListSerializer(serializers.ModelSerializer):
+    habit = HabitListSerializer(many=False, read_only=True)
+
+    class Meta:
+        model = HabitFollowUp
+        fields = [
+            'id',
+            'user',
+            'date',
+            'started_date',
+            'description',
+            'habit',
+            'time_spent',
+            'daily_goal',
+            'daily_target',
+            'is_accomplished',
+            'is_failed'
         ]
