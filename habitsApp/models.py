@@ -143,10 +143,11 @@ class HabitFollowUp(models.Model):
     is_failed = models.BooleanField(blank=True, null=True, default=False)
 
     @staticmethod
-    def get_object_by_date(day_date, user_id):
+    def get_object_by_date(day_date, habitId, user_id):
         parsed_date = datetime.strptime(day_date, '%Y-%m-%d')
         instance = HabitFollowUp.objects.filter(
             user=user_id,
+            habit=habitId,
             date=datetime(
                 parsed_date.year,
                 parsed_date.month,

@@ -40,7 +40,7 @@ class HabitFollowUpApi(APIView):
         if not habit:
             return Response({'error': True, 'message': 'The object does not exists'})
         date = request.data.get('date')
-        follow_up_instance = HabitFollowUp.get_object_by_date(date, request.user.id)
+        follow_up_instance = HabitFollowUp.get_object_by_date(date, habitId, request.user.id)
         data = {
             'date': date,
             'user': request.user.id,
