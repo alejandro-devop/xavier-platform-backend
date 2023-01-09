@@ -31,7 +31,7 @@ class HabitFollowUpApi(APIView):
         habit = Habit.get_object(request.user.id, habit_id)
         if not habit:
             return Response({'error': True, 'message': 'The object does not exists'})
-        follow_ups = HabitFollowUp.objects.filter(user=request.user.id)
+        follow_ups = HabitFollowUp.objects.filter(user=request.user.id, habit=habit_id)
         serializer = HabitFollowUpListSerializer(follow_ups, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
