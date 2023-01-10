@@ -6,4 +6,4 @@ class MeasuresSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = HabitMeasures
-        fields = ['id', 'user', 'name', 'abbreviation']
+        fields = ['id', 'user', 'name', 'abbreviation', 'icon']

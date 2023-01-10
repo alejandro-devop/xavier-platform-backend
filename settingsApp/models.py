@@ -10,6 +10,7 @@ class HabitMeasures(models.Model):
     name = models.CharField(max_length=100)
     # An abbreviation for the measure.
     abbreviation = models.CharField(max_length=100)
+    icon = models.CharField(max_length=200, blank=True, null=True)
 
     @staticmethod
     def already_registered(name, user_id, item_id=None):
