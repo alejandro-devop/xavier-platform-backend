@@ -291,9 +291,10 @@ class AddFollowUpApi(APIView):
         else:
             data['daily_goal'] = follow_up_instance.daily_goal + int(amount)
             serializer_update = HabitFollowUpSaveSerializer(instance=follow_up_instance, data=data, partial=True)
-            serializer_update.save()
-            habit.daily_goal = follow_up_instance.daily_goal + int(amount)
-            habit.save()
+            if serializer_update.is_valid():
+                serializer_update.save()
+                habit.daily_goal = follow_up_instance.daily_goal + int(amount)
+                habit.save()
 
     def get(self, request, activity_id, *args, **kwargs):
         """
