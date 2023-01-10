@@ -4,6 +4,8 @@ from .serializers import ActivityCategorySerializer, ActivitySerializer, Activit
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from datetime import datetime, timedelta
+from habitsApp.models import Habit, HabitFollowUp
+from habitsApp.serializers import HabitFollowUpSaveSerializer
 
 
 class ActivityListApi(APIView):
@@ -262,6 +264,36 @@ class AddFollowUpApi(APIView):
     API to get A particular Activity's follow ups and to add
     """
     permission_classes = [permissions.IsAuthenticated]
+
+    def update_habit(self, habit_id, user_id, date, description, amount):
+        habit = Habit.get_object(user_id, habit_id)
+        if not habit:
+            return False
+        follow_up_instance = HabitFollowUp.get_object_by_date(date, habit.id, user_id)
+        data = {
+            'date': date,
+            'user': user_id,
+            'started_date': date,
+            'description': description,
+            'habit': habit_id,
+            'time_spent': 0,
+            'daily_target': habit.daily_goal,
+            'daily_goal': amount,
+            'is_accomplished': False,
+            'is_failed': False,
+        }
+        if follow_up_instance is None:
+            serializer_save = HabitFollowUpSaveSerializer(data=data)
+            if serializer_save.is_valid():
+                serializer_save.save()
+                habit.daily_goal = amount
+                habit.save()
+        else:
+            serializer_update = HabitFollowUpSaveSerializer(instance=follow_up_instance, data=data, partial=True)
+            serializer_update.save()
+            habit.daily_goal = amount
+            habit.save()
+
     def get(self, request, activity_id, *args, **kwargs):
         """
         Method to add follow ups
@@ -280,6 +312,7 @@ class AddFollowUpApi(APIView):
             'time_spent': request.data.get('time_spent'),
             'user': request.user.id
         }
+        associated_habit = request.data.get('habit')
         activity = Activity.get_object(request.user.id, activity_id)
         if not activity:
             return Response({
@@ -309,6 +342,14 @@ class AddFollowUpApi(APIView):
         if serializer.is_valid() and activity_serializer.is_valid():
             serializer.save()
             activity_serializer.save()
+            if associated_habit is not None:
+                self.update_habit(
+                    associated_habit,
+                    request.user.id,
+                    request.data.get('date'),
+                    request.data.get('description'),
+                    request.data.get('time_spent')
+                )
             data_serializer = ActivityFollowUpListSerializer(serializer.instance)
             return Response(data_serializer.data, status=status.HTTP_201_CREATED)
 
